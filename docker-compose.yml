@@ -16,18 +16,39 @@ services:
         networks:
             - hadoop
 
-    datanode:
+    datanode1:
         image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-        container_name: datanode
+        container_name: datanode1
+        hostname: datanode1
         restart: always
         depends_on: 
             - namenode
         volumes:
-            - hadoop_datanode:/hadoop/dfs/data
+            - hadoop_datanode1:/hadoop/dfs/data
         environment:
             SERVICE_PRECONDITION: "namenode:9870"
         ports:
+            - 9866:9866
             - 9864:9864
+        env_file:
+            - ./hadoop.env
+        networks:
+            - hadoop
+
+    datanode2:
+        image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+        container_name: datanode2
+        restart: always
+        hostname: datanode2
+        depends_on: 
+            - namenode
+        volumes:
+            - hadoop_datanode2:/hadoop/dfs/data
+        environment:
+            SERVICE_PRECONDITION: "namenode:9870"
+        ports:
+            - 9867:9866
+            - 9865:9864
         env_file:
             - ./hadoop.env
         networks:
@@ -38,7 +59,7 @@ services:
         container_name: resourcemanager
         restart: always
         environment:
-            SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
+            SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode1:9864 datanode2:9864 datanode1:9866 datanode2:9866"
         ports:
             - 8088:8088
         env_file:
@@ -51,7 +72,7 @@ services:
         container_name: nodemanager
         restart: always
         environment:
-            SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+            SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode1:9864 datanode2:9864 datanode1:9866 datanode2:9866 resourcemanager:8088"
         ports:
             - 8042:8042
         env_file:
@@ -64,7 +85,7 @@ services:
         container_name: historyserver
         restart: always
         environment:
-            SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+            SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode1:9864 datanode2:9864 datanode1:9866 datanode2:9866 resourcemanager:8088"
         volumes:
             - hadoop_historyserver:/hadoop/yarn/timeline
         ports:
@@ -80,7 +101,8 @@ services:
         restart: always
         depends_on: 
             - namenode
-            - datanode
+            - datanode1
+            - datanode2
         environment:
             HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
         ports:
@@ -96,7 +118,7 @@ services:
         container_name: hive-metastore
         restart: always
         environment:
-            SERVICE_PRECONDITION: "namenode:9870 datanode:9864 hive-metastore-postgresql:5432"
+            SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 datanode2:9864 datanode1:9866 datanode2:9866 hive-metastore-postgresql:5432"
         command: /opt/hive/bin/hive --service metastore
         ports:
             - 9083:9083
@@ -126,7 +148,8 @@ services:
         container_name: spark-master
         depends_on:
             - namenode
-            - datanode
+            - datanode1
+            - datanode2
         environment:
             - INIT_DAEMON_STEP=setup_spark
         ports:
@@ -155,7 +178,8 @@ services:
 
 volumes:
     hadoop_namenode:
-    hadoop_datanode:
+    hadoop_datanode1:
+    hadoop_datanode2:
     hadoop_historyserver:
     hive_metastore:
 
