@@ -1,3 +1,15 @@
+# Introduction
+
+本项目为2022年秋数据仓库课程项目的子项目之一，通过docker模拟多台设备，在单台服务器上实现基于Hadoop、Hive和Spark的分布式查询系统。具体流程请参见我的[Blog](https://baokker.github.io/2022/12/17/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E8%AF%BE%E7%A8%8B%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C%E5%BF%83%E5%BE%97/#Spark)。
+
+以下为原Project的README。
+
+This project is one of the sub-projects of the 2022 autumn data warehouse course project. It simulates multiple devices through docker and implements a distributed query system based on Hadoop, Hive and Spark on a single server. For the specific process, please refer to my [Blog](https://baokker.github.io/2022/12/17/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93 %E8%AF%BE%E7%A8%8B%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C%E5%BF%83%E5%BE%97/# Spark).
+
+The following is the README of the original Project.
+
+---
+
 # Docker Hadoop Workbench
 
 A Hadoop cluster based on Docker, including Hive and Spark.
